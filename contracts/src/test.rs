@@ -124,3 +124,47 @@ fn test_cancellation_split() {
     assert_eq!(token_client.balance(&receiver), 250);
     assert_eq!(token_client.balance(&sender), 750);
 }
+
+#[test]
+fn test_batch_stream_creation() {
+    let ctx = setup_test();
+    let sender = Address::generate(&ctx.env);
+    let receiver1 = Address::generate(&ctx.env);
+    let receiver2 = Address::generate(&ctx.env);
+    let receiver3 = Address::generate(&ctx.env);
+
+    let total_amount = 3000_i128;
+    ctx.token.mint(&sender, &total_amount);
+
+    let mut requests = soroban_sdk::Vec::new(&ctx.env);
+    requests.push_back(StreamRequest {
+        receiver: receiver1.clone(),
+        amount: 1000,
+        start_time: 0,
+        end_time: 1000,
+    });
+    requests.push_back(StreamRequest {
+        receiver: receiver2.clone(),
+        amount: 1500,
+        start_time: 0,
+        end_time: 1000,
+    });
+    requests.push_back(StreamRequest {
+        receiver: receiver3.clone(),
+        amount: 500,
+        start_time: 0,
+        end_time: 1000,
+    });
+
+    let stream_ids = ctx
+        .client
+        .create_batch_streams(&sender, &ctx.token_id, &requests);
+
+    assert_eq!(stream_ids.len(), 3);
+    assert_eq!(stream_ids.get(0).unwrap(), 1);
+    assert_eq!(stream_ids.get(1).unwrap(), 2);
+    assert_eq!(stream_ids.get(2).unwrap(), 3);
+
+    let token_client = token::Client::new(&ctx.env, &ctx.token_id);
+    assert_eq!(token_client.balance(&ctx.contract_id), 3000);
+}
