@@ -143,18 +143,21 @@ fn test_batch_stream_creation() {
         receiver: receiver1.clone(),
         amount: 1000,
         start_time: 0,
+        cliff_time: 100,
         end_time: 1000,
     });
     requests.push_back(StreamRequest {
         receiver: receiver2.clone(),
         amount: 1500,
         start_time: 0,
+        cliff_time: 100,
         end_time: 1000,
     });
     requests.push_back(StreamRequest {
         receiver: receiver3.clone(),
         amount: 500,
         start_time: 0,
+        cliff_time: 100,
         end_time: 1000,
     });
 

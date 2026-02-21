@@ -19,6 +19,7 @@ pub struct StreamRequest {
     pub receiver: Address,
     pub amount: i128,
     pub start_time: u64,
+    pub cliff_time: u64,
     pub end_time: u64,
 }
 

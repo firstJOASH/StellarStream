@@ -143,6 +143,7 @@ impl StellarStream {
                 token: token.clone(),
                 amount: request.amount,
                 start_time: request.start_time,
+                cliff_time: request.cliff_time,
                 end_time: request.end_time,
                 withdrawn_amount: 0,
             };
